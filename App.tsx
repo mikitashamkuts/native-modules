@@ -8,6 +8,7 @@
 import React from 'react';
 import type {PropsWithChildren} from 'react';
 import {
+  Button,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -24,6 +25,9 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import {NativeModules} from 'react-native';
+
+const {InternetConsumption, DeviceTemperature} = NativeModules;
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -72,6 +76,30 @@ function App(): JSX.Element {
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
         <Header />
+        <Button
+          title="Get Device's Temperature"
+          onPress={() => {
+            DeviceTemperature.getDeviceTemperature()
+              .then((temperature: any) => {
+                console.log('device temperature:', temperature, '°C');
+              })
+              .catch((error: any) => {
+                console.error('Failed to get device temperature:', error);
+              });
+          }}
+        />
+        <Button
+          title="Get Device's Internet Consumption"
+          onPress={() => {
+            InternetConsumption.getDataUsage()
+              .then((data: any) => {
+                console.log('internet consumption: ', data, 'bytes');
+              })
+              .catch((error: any) => {
+                console.error('Failed to get data usage:', error);
+              });
+          }}
+        />
         <View
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
